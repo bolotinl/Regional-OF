@@ -75,31 +75,21 @@ if (type == 'uv') {
   
   colnames(q_hourly_full) <- c('date', 'QObs_cfs')
   
-  # Get drainage area in meters squared
+  # Calculate specific discharge
   site_info <- readNWISsite(site)
-    da <- site_info$drain_area_va #mi2
-  da_m2 <- da*2589988.11 #m2 
-  
-  # Get flow in cubic meters per second
-  # Comment for now and try the same approach used in thesis code
-  # q_hourly_full$QObs_mmh <- as.numeric(q_hourly_full$QObs_cfs)*0.0283168 #m3/s
-  # q_hourly_full$QObs_mmh <- q_hourly_full$QObs_mmh/da_m2 #m/s
-  # q_hourly_full$QObs_mmh <- q_hourly_full$QObs_mmh*3600 #mm/hr
-  # 
-  # q_hourly_full$QObs_mmh <- ifelse(is.na(q_hourly_full$QObs_mmh), paste0('NaN'), paste0(q_hourly_full$QObs_mmh))
-  
+  da <- site_info$drain_area_va # sq mi
   drainage_area <- da*27878400 # sq mi to sq ft
-  q_hourly_full_test <- q_hourly_full
-  q_hourly_full_test$Q_ft_s <- q_hourly_full_test$QObs_cfs/drainage_area 
-  q_hourly_full_test$Q_mm_hr <- q_hourly_full_test$Q_ft_s*304.8*3600
-  # This give more normal numbers.
   
+  q_hourly_full$Q_ft_s <- q_hourly_full$QObs_cfs/drainage_area 
+  q_hourly_full$Q_mm_hr <- q_hourly_full$Q_ft_s*304.8*3600
+
   q_path <- glue('./Formatted_Q/{site}_uv.csv')
-  write.csv(q_hourly_full_test, q_path)
+  write.csv(q_hourly_full, q_path)
   
 } # End of if statement
 
 if (type == 'dv') {
+  
   q$Date <- ymd(q$Date)
  
   q_start <- q$Date[1]
@@ -112,37 +102,26 @@ if (type == 'dv') {
   
   colnames(q_full) <- c('date', 'QObs_cfs')
   
+  # Calculate specific discharge
   site_info <- readNWISsite(site)
-  
-  # Get drainage area in meters squared
-  da <- site_info$drain_area_va #mi2
-  da_m2 <- da*2589988.11#m2
-  
-  # Get flow in cubic meters per second
-  # Comment for now and try approach used in thesis codes
-  # q_full$QObs_mmd <- as.numeric(q_full$QObs_cfs)*0.0283168 #m3/s
-  # q_full$QObs_mmd <- q_full$QObs_mmd/da_m2 #m/s
-  # q_full$QObs_mmd <- q_full$QObs_mmd*86400 #mm/d
-  # 
-  # q_full$QObs_mmd <- ifelse(is.na(q_full$QObs_mmd), paste0('NaN'), paste0(q_full$QObs_mmd))
-  
+  da <- site_info$drain_area_va # sq mi
   drainage_area <- da*27878400 # sq mi to sq ft
-  q_full_test <- q_full
-  q_full_test$Q_ft_s <- q_full_test$QObs_cfs/drainage_area 
-  q_full_test$Q_mm_d <- q_full_test$Q_ft_s*304.8*86400
-  # This give more normal numbers.
   
+  q_full$Q_ft_s <- q_full$QObs_cfs/drainage_area 
+  q_full$Q_mm_d <- q_full$Q_ft_s*304.8*86400
+
   q_path <- glue('./Formatted_Q/{site}_dv.csv')
   write.csv(q_full, q_path)
   } # End of if statement
 } # End of function
 
+# Apply formatting function to all data files for all sites
 lapply(run.list, format_Q)
 
 # PAIR WITH NLDAS PRECIP DATA -----------------------------------------------------
-# For now, pair each gauge with the NLDAS grid cell it is in
-
-nldas <- read.csv('./NLDAS_intersections.csv')
+# For now, just pair each gauge with the NLDAS grid cell it is in
+# Found intersections and downloaded data using NLDAS python tool:
+nldas <- read.csv('./NLDAS_intersections.csv') 
 nldas$NLDAS_ID <- paste0('X', zeroPad(nldas$NLDAS_X, 3), '-', 'Y', zeroPad(nldas$NLDAS_Y, 3))
 
 pair_P <- function(x){
