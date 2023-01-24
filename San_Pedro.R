@@ -10,7 +10,7 @@ setwd('/Volumes/GoogleDrive/Shared drives/Lauren and Hilary/Regional Overland Fl
 site_query <- whatNWISsites(parameterCd = '00060', huc = c('15050202', '15050203'))
 site_query <- site_query %>% filter(site_tp_cd == 'ST') # streams only
 
-sites <- unique(data_query$site_no)
+sites <- unique(site_query$site_no)
 
 # See what kind of data is available at these sites
 data_query <- whatNWISdata(siteNumbers = sites)
@@ -150,7 +150,7 @@ pair_P <- function(x){
   Q$date <- ymd_hms(Q$date)
   Q <- Q %>% select(-c(X))
   merged_dat <- merge(Q, nldas_P, all.y = TRUE, by.x = 'date', by.y = 'DateTime')
-  merged_dat$QObs_mmh <- ifelse(is.na(merged_dat$QObs_mmh), paste0('NaN'), paste0(merged_dat$QObs_mmh))
+  merged_dat$Q_mm_hr <- ifelse(is.na(merged_dat$Q_mm_hr), paste0('NaN'), paste0(merged_dat$Q_mm_hr))
   merged_dat$QObs_cfs <- ifelse(is.na(merged_dat$QObs_cfs), paste0('NaN'), paste0(merged_dat$QObs_cfs))
   merged_dat$yday <- yday(merged_dat$date)
   
@@ -159,7 +159,7 @@ pair_P <- function(x){
   write.csv(merged_dat, merged_path)
   
   monsoon_dat <- merged_dat
-  monsoon_dat$QObs_mmh <- ifelse(monsoon_dat$yday <= 156 | monsoon_dat$yday >=257, 'NaN', monsoon_dat$QObs_mmh)
+  monsoon_dat$Q_mm_hr <- ifelse(monsoon_dat$yday <= 156 | monsoon_dat$yday >=257, 'NaN', monsoon_dat$Q_mm_hr)
   monsoon_path <- glue('./Monsoon_Data/{site}_QPmons_{type}.csv')
   write.csv(monsoon_dat, monsoon_path)
   
@@ -177,16 +177,15 @@ pair_P <- function(x){
     colnames(nldas_P_daily)[1] <- 'DateTime'
     
     merged_dat <- merge(Q, nldas_P_daily, all.y = TRUE, by.x = 'date', by.y = 'DateTime')
-    merged_dat$QObs_mmd <- ifelse(is.na(merged_dat$QObs_mmd), paste0('NaN'), paste0(merged_dat$QObs_mmd))
+    merged_dat$Q_mm_d <- ifelse(is.na(merged_dat$Q_mm_d), paste0('NaN'), paste0(merged_dat$Q_mm_d))
     merged_dat$QObs_cfs <- ifelse(is.na(merged_dat$QObs_cfs), paste0('NaN'), paste0(merged_dat$QObs_cfs))
     merged_dat$yday <- yday(merged_dat$date)
-    
     
     merged_path <- glue('./QP_Data/{site}_QP_{type}.csv')
     write.csv(merged_dat, merged_path)
     
     monsoon_dat <- merged_dat
-    monsoon_dat$QObs_mmd <- ifelse(monsoon_dat$yday <= 156 | monsoon_dat$yday >=257, 'NaN', monsoon_dat$QObs_mmd)
+    monsoon_dat$Q_mm_d <- ifelse(monsoon_dat$yday <= 156 | monsoon_dat$yday >=257, 'NaN', monsoon_dat$Q_mm_d)
     monsoon_path <- glue('./Monsoon_Data/{site}_QPmons_{type}.csv')
     write.csv(monsoon_dat, monsoon_path)
     
@@ -195,5 +194,7 @@ pair_P <- function(x){
   } # End of pair_P function
   
 
-lapply(run.list, pair_P)
+lapply(run.list[1:6], pair_P)
+# run 7 manually?
+lapply(run.list[8:28], pair_P)
 
