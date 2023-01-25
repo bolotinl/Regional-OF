@@ -106,8 +106,7 @@ for i = 1:length(files)
     P_mat = {data.total_precipitation};
 
     % Calculate signatures
-    %results = calc_McMillan_OverlandFlow(Q_mat, t_mat, P_mat);
-    results = calc_McMillan_OverlandFlow_withWu(Q_mat, t_mat, P_mat);
+    results = calc_McMillan_OverlandFlow(Q_mat, t_mat, P_mat);
     results.site = site8;
 
     % Create path names for export files
