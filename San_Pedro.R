@@ -10,12 +10,15 @@ setwd('/Volumes/GoogleDrive/Shared drives/Lauren and Hilary/Regional Overland Fl
 site_query <- whatNWISsites(parameterCd = '00060', huc = c('15050202', '15050203'))
 site_query <- site_query %>% filter(site_tp_cd == 'ST') # streams only
 
-sites <- unique(site_query$site_no)
 
 # See what kind of data is available at these sites
 data_query <- whatNWISdata(siteNumbers = sites)
 data_query <- data_query %>% filter(parm_cd == '00060') # discharge only
 data_query <- data_query %>% filter(data_type_cd != 'qw') # logger data only, not field obs
+data_query <- data_query %>% filter(end_date > '1980-01-01')
+
+site_query <- site_query %>% filter(site_no %in% data_query$site_no)
+sites <- unique(site_query$site_no)
 
 # Output site info
 write.csv(site_query, './Q_site_info.csv')
@@ -29,14 +32,14 @@ types <- data$data_type_cd
 
 # If sub-daily data is available, download it. If not, download daily data.
 if ('uv' %in% types) {
-  q <- readNWISuv(site, '00060', '', '') # Grabs full period of available data
+  q <- readNWISuv(site, '00060', '1980-01-01', '') # Grabs full period of available data after NLDAS becomes available
 } else {
- q <- readNWISdv(site, '00060', '', '') # Grabs full period of available data
+ q <- readNWISdv(site, '00060', '1980-01-01', '') 
 }
 
 type <- ifelse('uv' %in% types, 'uv', 'dv')
 
-q_path <- glue('./Q_{site}_{type}.csv')
+q_path <- glue('./Streamflow Data/Q_{site}_{type}.csv')
 write.csv(q, q_path)
 }
 
@@ -49,7 +52,7 @@ format_Q <- function(x) {
 
 site <- sites[x]
 q_path <- glue('Q_{site}')
-q_file <- list.files(path = getwd(), pattern = q_path)
+q_file <- list.files(path = '/Volumes/GoogleDrive/Shared drives/Lauren and Hilary/Regional Overland Flow Project/Data and Scripts/San Pedro River/Streamflow Data', pattern = q_path)
 
 q <- read.csv(q_file)
 type <- substr(q_file, 12, 13)
@@ -149,7 +152,7 @@ pair_P <- function(x){
     
   Q$date <- ymd_hms(Q$date)
   Q <- Q %>% select(-c(X))
-  merged_dat <- merge(Q, nldas_P, all.y = TRUE, by.x = 'date', by.y = 'DateTime')
+  merged_dat <- merge(Q, nldas_P, all.x = TRUE, by.x = 'date', by.y = 'DateTime')
   merged_dat$Q_mm_hr <- ifelse(is.na(merged_dat$Q_mm_hr), paste0('NaN'), paste0(merged_dat$Q_mm_hr))
   merged_dat$QObs_cfs <- ifelse(is.na(merged_dat$QObs_cfs), paste0('NaN'), paste0(merged_dat$QObs_cfs))
   merged_dat$yday <- yday(merged_dat$date)
@@ -176,7 +179,7 @@ pair_P <- function(x){
       summarise_at(.vars = c('total_precipitation'), .funs = c(total_precipitation='sum'))
     colnames(nldas_P_daily)[1] <- 'DateTime'
     
-    merged_dat <- merge(Q, nldas_P_daily, all.y = TRUE, by.x = 'date', by.y = 'DateTime')
+    merged_dat <- merge(Q, nldas_P_daily, all.x = TRUE, by.x = 'date', by.y = 'DateTime')
     merged_dat$Q_mm_d <- ifelse(is.na(merged_dat$Q_mm_d), paste0('NaN'), paste0(merged_dat$Q_mm_d))
     merged_dat$QObs_cfs <- ifelse(is.na(merged_dat$QObs_cfs), paste0('NaN'), paste0(merged_dat$QObs_cfs))
     merged_dat$yday <- yday(merged_dat$date)
@@ -193,8 +196,8 @@ pair_P <- function(x){
   
   } # End of pair_P function
   
-
-lapply(run.list[1:6], pair_P)
-# run 7 manually?
-lapply(run.list[8:28], pair_P)
+lapply(run.list, pair_P)
+# lapply(run.list[1:6], pair_P)
+# # run 7 manually?
+# lapply(run.list[8:28], pair_P)
 

@@ -24,8 +24,8 @@ folder_name = '../Signature Data/';
 file_name_end_total = '_uv_results_monsoon.csv';
 
 % run i = 17 manually and change line 33 column name
-
-for i = 1:length(files)
+% 16 is weird for Wu
+for i = 18:length(files)
     data = readtable(files(i).name);    
     site8 = files(i).name(1:8);
     site = str2double(site8);
@@ -60,7 +60,7 @@ folder_name = '../Signature Data/';
 file_name_end_total = '_dv_results_monsoon.csv';
 
 
-for i = 1:length(files)
+for i = 3:length(files)
     data = readtable(files(i).name);    
     site8 = files(i).name(1:8);
     site = str2double(site8);
@@ -72,7 +72,9 @@ for i = 1:length(files)
 
 
     % Calculate signatures
-    results = calc_McMillan_OverlandFlow(Q_mat, t_mat, P_mat);
+    %results = calc_McMillan_OverlandFlow(Q_mat, t_mat, P_mat);
+    results = calc_McMillan_OverlandFlow_withWu(Q_mat, t_mat, P_mat);
+
     results.site = site8;
     
     % Create path names for export files
@@ -95,6 +97,7 @@ files = dir(fullfile(pwd, '*uv.csv'));
 folder_name = '../Signature Data/';
 file_name_end_total = '_uv_results_all.csv';
 
+% i = 16 isn't working
 for i = 1:length(files)
     data = readtable(files(i).name);    
     site8 = files(i).name(1:8);
@@ -140,7 +143,7 @@ for i = 1:length(files)
 
 
     % Calculate signatures
-    results = calc_McMillan_OverlandFlow(Q_mat, t_mat, P_mat);
+    results = calc_McMillan_OverlandFlow_withWu(Q_mat, t_mat, P_mat);
     results.site = site8;
     
     % Create path names for export files
