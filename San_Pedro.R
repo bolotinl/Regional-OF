@@ -9,6 +9,7 @@ setwd('/Volumes/GoogleDrive/Shared drives/Lauren and Hilary/Regional Overland Fl
 # Identify sites by huc 8 basin (Upper & Lower San Pedro)
 site_query <- whatNWISsites(parameterCd = '00060', huc = c('15050202', '15050203'))
 site_query <- site_query %>% filter(site_tp_cd == 'ST') # streams only
+sites <- unique(site_query$site_no)
 
 
 # See what kind of data is available at these sites
@@ -179,7 +180,7 @@ pair_P <- function(x){
       summarise_at(.vars = c('total_precipitation'), .funs = c(total_precipitation='sum'))
     colnames(nldas_P_daily)[1] <- 'DateTime'
     
-    merged_dat <- merge(Q, nldas_P_daily, all.x = TRUE, by.x = 'date', by.y = 'DateTime')
+    merged_dat <- merge(Q, nldas_P_daily, all.y = TRUE, by.x = 'date', by.y = 'DateTime')
     merged_dat$Q_mm_d <- ifelse(is.na(merged_dat$Q_mm_d), paste0('NaN'), paste0(merged_dat$Q_mm_d))
     merged_dat$QObs_cfs <- ifelse(is.na(merged_dat$QObs_cfs), paste0('NaN'), paste0(merged_dat$QObs_cfs))
     merged_dat$yday <- yday(merged_dat$date)
