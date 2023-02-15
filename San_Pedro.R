@@ -16,7 +16,7 @@ sites <- unique(site_query$site_no)
 data_query <- whatNWISdata(siteNumbers = sites)
 data_query <- data_query %>% filter(parm_cd == '00060') # discharge only
 data_query <- data_query %>% filter(data_type_cd != 'qw') # logger data only, not field obs
-data_query <- data_query %>% filter(end_date > '1980-01-01')
+data_query <- data_query %>% filter(end_date > '1980-01-01') # NLDAS doesn't start until 1980
 
 site_query <- site_query %>% filter(site_no %in% data_query$site_no)
 sites <- unique(site_query$site_no)
@@ -45,8 +45,9 @@ write.csv(q, q_path)
 }
 
 run.list <- seq(length(sites))
+
 # Apply download function to all sites:
-lapply(run.list, download_Q)
+# lapply(run.list, download_Q) # Comment after running once to avoid re-downloading
 
 ## Format Data ----------------------------------------------------------------
 format_Q <- function(x) {
@@ -109,6 +110,11 @@ if (type == 'dv') {
   # Calculate specific discharge
   site_info <- readNWISsite(site)
   da <- site_info$drain_area_va # sq mi
+  if (is.na(da)) {
+    watershed_areas <- read.csv('watershed_areas.csv')
+    da <- watershed_areas$AREA[zeroPad(watershed_areas$GAGE_ID,8) == site] # sq m
+    da <- da * 3.861022e-7 #sq mi
+  }
   drainage_area <- da*27878400 # sq mi to sq ft
   
   q_full$Q_ft_s <- q_full$QObs_cfs/drainage_area 
@@ -120,13 +126,11 @@ if (type == 'dv') {
 } # End of function
 
 # Apply formatting function to all data files for all sites
-lapply(run.list, format_Q)
+# lapply(run.list, format_Q) # Comment after running once to avoid re-formatting
 
 # PAIR WITH NLDAS PRECIP DATA -----------------------------------------------------
-# For now, just pair each gauge with the NLDAS grid cell it is in
-# Found intersections and downloaded data using NLDAS python tool:
-nldas <- read.csv('./NLDAS_intersections.csv') 
-nldas$NLDAS_ID <- paste0('X', zeroPad(nldas$NLDAS_X, 3), '-', 'Y', zeroPad(nldas$NLDAS_Y, 3))
+# Calculated area-weighted P using climrods python tool:
+area_weighted_files <- list.files(path = './NLDAS_climrods/weighted_P', pattern = '.csv')
 
 pair_P <- function(x){
   site <- sites[x]
@@ -135,15 +139,13 @@ pair_P <- function(x){
   q_file <- list.files(path = getwd(), pattern = q_path)
   type <- substr(q_file, 12, 13)
   
-  nldas_id <- nldas$NLDAS_ID[zeroPad(nldas$site_no, 8) == site]
+  nldas_file <- area_weighted_files[substr(area_weighted_files, 24, 31) == site]
   
-  nldas_path <- glue('./NLDAS Precip/APCPsfc_{nldas_id}.csv')
+  nldas_path <- glue('./NLDAS_climrods/weighted_P/{nldas_file}')
   nldas_P <- read.csv(nldas_path)
-  nldas_P <- separate(nldas_P, 1, c('DateTime', 'total_precipitation'), sep = ' (?=[^ ]+$)')   
-  nldas_P$DateTime <- paste0(substr(nldas_P$DateTime, 7, 19), ':00:00')
   nldas_P$DateTime <- ymd_hms(nldas_P$DateTime)
   nldas_P <- nldas_P[complete.cases(nldas_P),]
-  nldas_P$total_precipitation <- as.numeric(as.character(nldas_P$total_precipitation))
+  colnames(nldas_P)[3] <- 'total_precipitation'
   
   Q_path <- list.files(paste0(getwd(), '/Formatted_Q/'), pattern = site)
   Q_path <- glue('./Formatted_Q/{Q_path}')
@@ -198,7 +200,3 @@ pair_P <- function(x){
   } # End of pair_P function
   
 lapply(run.list, pair_P)
-# lapply(run.list[1:6], pair_P)
-# # run 7 manually?
-# lapply(run.list[8:28], pair_P)
-
