@@ -1089,6 +1089,548 @@ rm(DTBR, DTBR_IE_grid, DTBR_SE_grid, DTBR_IE_effect, DTBR_IE_thresh, DTBR_SE_eff
    DTBR_mons_Storage_thresh, DTBR_mons_R_Pvol_RC, DTBR_mons_R_Pint_RC, DTBR_R_Pint_RC, DTBR_R_Pvol_RC)
 
 
+# PERMEABILITY ---------------------------
+perm <- read.table('../Catchment Attribute Data/OLSON_ACC_CONUS.TXT', sep = ',', header = TRUE)
+perm <- perm %>%
+  filter(COMID %in% sites$COMID) %>%
+  dplyr::select(c(COMID, ACC_OLSON_PERM))
+colnames(perm) <- c('COMID', 'permeability')
+
+perm <- merge(sites, perm, by = 'COMID')
+perm$GAGE_ID <- as.numeric(substr(perm$GAGE_ID, 6, 13))
+
+perm <- merge(perm, sigs, by.x = 'GAGE_ID', by.y = 'site')
+
+
+# Monsoon IE Effect ----
+perm_mons_IE_effect_cor <- cor.test(y =perm$permeability, x =perm$mons_IE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_mons_IE_effect <- ggplot(perm, aes(y = permeability, x = mons_IE_effect))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'IE Effect')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_IE_effect_mons.png', plot = perm_mons_IE_effect, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_mons_IE_effect_cor)
+
+# Monsoon SE effect ----
+perm_mons_SE_effect_cor <- cor.test(y =perm$permeability, x =perm$mons_SE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_mons_SE_effect <- ggplot(perm, aes(y = permeability, x = mons_SE_effect))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'SE Effect')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_SE_effect_mons.png', plot = perm_mons_SE_effect, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_mons_SE_effect_cor)
+
+# Monsoon IE thresh ----
+perm_mons_IE_thresh_cor <- cor.test(y =perm$permeability, x =perm$mons_IE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_mons_IE_thresh <- ggplot(perm, aes(y = permeability, x = mons_IE_thresh))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'IE Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_IE_thresh_mons.png', plot = perm_mons_IE_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_mons_IE_thresh_cor)
+
+# Monsoon SE thresh ----
+perm_mons_SE_thresh_cor <- cor.test(y =perm$permeability, x =perm$mons_SE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_mons_SE_thresh <- ggplot(perm, aes(y = permeability, x = mons_SE_thresh))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'SE Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_SE_thresh_mons.png', plot = perm_mons_SE_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_mons_SE_thresh_cor)
+
+# Monsoon Storage thresh ----
+perm_mons_Storage_thresh_cor <- cor.test(y =perm$permeability, x =perm$mons_Storage_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_mons_Storage_thresh <- ggplot(perm, aes(y = permeability, x = mons_Storage_thresh))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'Storage Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_Storage_thresh_mons.png', plot = perm_mons_Storage_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_mons_Storage_thresh_cor)
+
+# Monsoon R Pvol ----
+perm_mons_R_Pvol_RC_cor <- cor.test(y =perm$permeability, x =perm$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_mons_R_Pvol_RC <- ggplot(perm, aes(y = permeability, x = mons_R_Pvol_RC))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'R Pvol RC')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_R_Pvol_RC_mons.png', plot = perm_mons_R_Pvol_RC, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+
+rm(perm_mons_R_Pvol_RC_cor)
+
+# Monsoon R Pint ----
+perm_mons_R_Pint_RC_cor <- cor.test(y =perm$permeability, x =perm$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_mons_R_Pint_RC <- ggplot(perm, aes(y = permeability, x = mons_R_Pint_RC))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'R Pint RC')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_R_Pint_RC_mons.png', plot = perm_mons_R_Pint_RC, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+
+rm(perm_mons_R_Pint_RC_cor)
+
+#  IE Effect ----
+perm_IE_effect_cor <- cor.test(y =perm$permeability, x =perm$IE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_IE_effect <- ggplot(perm, aes(y = permeability, x = IE_effect))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color='#DD8D29')+
+  labs(y = 'Permeability (um/s)', x = 'IE Effect')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_IE_effect.png', plot = perm_IE_effect, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_IE_effect_cor)
+
+#  SE effect ----
+perm_SE_effect_cor <- cor.test(y =perm$permeability, x =perm$SE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_SE_effect <- ggplot(perm, aes(y = permeability, x = SE_effect))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = 'Permeability (um/s)', x = 'SE Effect')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_SE_effect.png', plot = perm_SE_effect, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_SE_effect_cor)
+
+#  IE thresh ----
+perm_IE_thresh_cor <- cor.test(y =perm$permeability, x =perm$IE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_IE_thresh <- ggplot(perm, aes(y = permeability, x = IE_thresh))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = 'Permeability (um/s)', x = 'IE Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_IE_thresh.png', plot = perm_IE_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_IE_thresh_cor)
+
+#  SE thresh ----
+perm_SE_thresh_cor <- cor.test(y =perm$permeability, x =perm$SE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_SE_thresh <- ggplot(perm, aes(y = permeability, x = SE_thresh))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = 'Permeability (um/s)', x = 'SE Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_SE_thresh.png', plot = perm_SE_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_SE_thresh_cor)
+
+#  Storage thresh ----
+perm_Storage_thresh_cor <- cor.test(y =perm$permeability, x =perm$Storage_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_Storage_thresh <- ggplot(perm, aes(y = permeability, x = Storage_thresh))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = 'Permeability (um/s)', x = 'Storage Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_Storage_thresh.png', plot = perm_Storage_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_Storage_thresh_cor)
+
+#  R Pvol ----
+perm_R_Pvol_RC_cor <- cor.test(y =perm$permeability, x =perm$R_Pvol_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_R_Pvol_RC <- ggplot(perm, aes(y = permeability, x = R_Pvol_RC))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = 'Permeability (um/s)', x = 'R Pvol RC')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_R_Pvol_RC.png', plot = perm_R_Pvol_RC, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_R_Pvol_RC_cor)
+
+#  R Pint ----
+perm_R_Pint_RC_cor <- cor.test(y =perm$permeability, x =perm$R_Pint_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+perm_R_Pint_RC <- ggplot(perm, aes(y = permeability, x = R_Pint_RC))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = 'Permeability (um/s)', x = 'R Pint RC')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_R_Pint_RC.png', plot = perm_R_Pint_RC, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(perm_R_Pint_RC_cor)
+
+perm_IE_grid <- plot_grid(perm_IE_effect, perm_mons_IE_effect,
+                        perm_IE_thresh, perm_mons_IE_thresh,
+                        perm_R_Pint_RC, perm_mons_R_Pint_RC,
+                        ncol = 2)
+
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_IE_grid.png', plot = perm_IE_grid, width = 6, height = 7.5, units = c('in'), dpi = 300, bg = 'white')
+perm_IE_grid
+
+perm_SE_grid <- plot_grid(perm_SE_effect, perm_mons_SE_effect,
+                        perm_SE_thresh, perm_mons_SE_thresh,
+                        perm_R_Pvol_RC, perm_mons_R_Pvol_RC,
+                        perm_Storage_thresh, perm_mons_Storage_thresh,
+                        ncol = 2)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_SE_grid.png', plot = perm_SE_grid, width = 6, height = 7.5, units = c('in'), dpi = 300, bg = 'white')
+perm_SE_grid
+
+rm(perm_IE_effect, perm_Storage_thresh, perm_SE_thresh, perm_SE_grid, perm_SE_effect, perm_R_Pvol_RC, perm_R_Pint_RC,
+   perm_mons_Storage_thresh, perm_mons_SE_thresh, perm_mons_SE_effect, perm_mons_R_Pvol_RC, perm_mons_R_Pint_RC,
+   perm_mons_IE_thresh, perm_mons_IE_effect, perm_IE_thresh, perm_mons_IE_effect, perm_IE_grid, perm)
+
+
+
+# IMPERVIOUSNESS ---------------------------
+imp <- read.table('../Catchment Attribute Data/IMPV06_CONUS.txt', sep = ',', header = TRUE)
+imp <- imp %>%
+  filter(COMID %in% sites$COMID) %>%
+  dplyr::select(c(COMID, ACC_IMPV06))
+colnames(imp) <- c('COMID', 'Pct_Impervious')
+
+imp <- merge(sites, imp, by = 'COMID')
+imp$GAGE_ID <- as.numeric(substr(imp$GAGE_ID, 6, 13))
+
+imp <- merge(imp, sigs, by.x = 'GAGE_ID', by.y = 'site')
+
+
+# Monsoon IE Effect ----
+imp_mons_IE_effect_cor <- cor.test(y =imp$Pct_Impervious, x =imp$mons_IE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_mons_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_mons_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_mons_IE_effect <- ggplot(imp, aes(y = Pct_Impervious, x = mons_IE_effect))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'IE Effect')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_IE_effect_mons.png', plot = imp_mons_IE_effect, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_mons_IE_effect_cor)
+
+# Monsoon SE effect ----
+imp_mons_SE_effect_cor <- cor.test(y =imp$Pct_Impervious, x =imp$mons_SE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_mons_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_mons_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_mons_SE_effect <- ggplot(imp, aes(y = Pct_Impervious, x = mons_SE_effect))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'SE Effect')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_SE_effect_mons.png', plot = imp_mons_SE_effect, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_mons_SE_effect_cor)
+
+# Monsoon IE thresh ----
+imp_mons_IE_thresh_cor <- cor.test(y =imp$Pct_Impervious, x =imp$mons_IE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_mons_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_mons_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_mons_IE_thresh <- ggplot(imp, aes(y = Pct_Impervious, x = mons_IE_thresh))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'IE Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_IE_thresh_mons.png', plot = imp_mons_IE_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_mons_IE_thresh_cor)
+
+# Monsoon SE thresh ----
+imp_mons_SE_thresh_cor <- cor.test(y =imp$Pct_Impervious, x =imp$mons_SE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_mons_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_mons_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_mons_SE_thresh <- ggplot(imp, aes(y = Pct_Impervious, x = mons_SE_thresh))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'SE Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_SE_thresh_mons.png', plot = imp_mons_SE_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_mons_SE_thresh_cor)
+
+# Monsoon Storage thresh ----
+imp_mons_Storage_thresh_cor <- cor.test(y =imp$Pct_Impervious, x =imp$mons_Storage_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_mons_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_mons_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_mons_Storage_thresh <- ggplot(imp, aes(y = Pct_Impervious, x = mons_Storage_thresh))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'Storage Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_Storage_thresh_mons.png', plot = imp_mons_Storage_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_mons_Storage_thresh_cor)
+
+# Monsoon R Pvol ----
+imp_mons_R_Pvol_RC_cor <- cor.test(y =imp$Pct_Impervious, x =imp$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_mons_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_mons_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_mons_R_Pvol_RC <- ggplot(imp, aes(y = Pct_Impervious, x = mons_R_Pvol_RC))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'R Pvol RC')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_R_Pvol_RC_mons.png', plot = imp_mons_R_Pvol_RC, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+
+rm(imp_mons_R_Pvol_RC_cor)
+
+# Monsoon R Pint ----
+imp_mons_R_Pint_RC_cor <- cor.test(y =imp$Pct_Impervious, x =imp$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_mons_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_mons_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_mons_R_Pint_RC <- ggplot(imp, aes(y = Pct_Impervious, x = mons_R_Pint_RC))+
+  geom_point(color = '#46ACC8')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
+  labs(y = '', x = 'R Pint RC')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_R_Pint_RC_mons.png', plot = imp_mons_R_Pint_RC, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+
+rm(imp_mons_R_Pint_RC_cor)
+
+#  IE Effect ----
+imp_IE_effect_cor <- cor.test(y =imp$Pct_Impervious, x =imp$IE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_IE_effect <- ggplot(imp, aes(y = Pct_Impervious, x = IE_effect))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color='#DD8D29')+
+  labs(y = '% Impervious', x = 'IE Effect')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_IE_effect.png', plot = imp_IE_effect, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_IE_effect_cor)
+
+#  SE effect ----
+imp_SE_effect_cor <- cor.test(y =imp$Pct_Impervious, x =imp$SE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_SE_effect <- ggplot(imp, aes(y = Pct_Impervious, x = SE_effect))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = '% Impervious', x = 'SE Effect')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_SE_effect.png', plot = imp_SE_effect, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_SE_effect_cor)
+
+#  IE thresh ----
+imp_IE_thresh_cor <- cor.test(y =imp$Pct_Impervious, x =imp$IE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_IE_thresh <- ggplot(imp, aes(y = Pct_Impervious, x = IE_thresh))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = '% Impervious', x = 'IE Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_IE_thresh.png', plot = imp_IE_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_IE_thresh_cor)
+
+#  SE thresh ----
+imp_SE_thresh_cor <- cor.test(y =imp$Pct_Impervious, x =imp$SE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_SE_thresh <- ggplot(imp, aes(y = Pct_Impervious, x = SE_thresh))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = '% Impervious', x = 'SE Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_SE_thresh.png', plot = imp_SE_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_SE_thresh_cor)
+
+#  Storage thresh ----
+imp_Storage_thresh_cor <- cor.test(y =imp$Pct_Impervious, x =imp$Storage_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_Storage_thresh <- ggplot(imp, aes(y = Pct_Impervious, x = Storage_thresh))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = '% Impervious', x = 'Storage Thresh')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_Storage_thresh.png', plot = imp_Storage_thresh, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_Storage_thresh_cor)
+
+#  R Pvol ----
+imp_R_Pvol_RC_cor <- cor.test(y =imp$Pct_Impervious, x =imp$R_Pvol_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_R_Pvol_RC <- ggplot(imp, aes(y = Pct_Impervious, x = R_Pvol_RC))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = '% Impervious', x = 'R Pvol RC')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_R_Pvol_RC.png', plot = imp_R_Pvol_RC, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_R_Pvol_RC_cor)
+
+#  R Pint ----
+imp_R_Pint_RC_cor <- cor.test(y =imp$Pct_Impervious, x =imp$R_Pint_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(imp_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
+                              gp=gpar(col="black", fontsize=10)))
+text_p <- grobTree(textGrob(paste0('p-value = ', round(imp_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
+                            gp=gpar(col="black", fontsize=10)))
+imp_R_Pint_RC <- ggplot(imp, aes(y = Pct_Impervious, x = R_Pint_RC))+
+  geom_point(color = '#DD8D29')+
+  geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
+  labs(y = '% Impervious', x = 'R Pint RC')+
+  theme_bw()+ 
+  annotation_custom(text_rho)+
+  annotation_custom(text_p)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_R_Pint_RC.png', plot = imp_R_Pint_RC, width = 3.5, height = 3.5, units = c('in'), dpi = 300, bg = 'white')
+rm(imp_R_Pint_RC_cor)
+
+imp_IE_grid <- plot_grid(imp_IE_effect, imp_mons_IE_effect,
+                          imp_IE_thresh, imp_mons_IE_thresh,
+                          imp_R_Pint_RC, imp_mons_R_Pint_RC,
+                          ncol = 2)
+
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_IE_grid.png', plot = imp_IE_grid, width = 6, height = 7.5, units = c('in'), dpi = 300, bg = 'white')
+imp_IE_grid
+
+imp_SE_grid <- plot_grid(imp_SE_effect, imp_mons_SE_effect,
+                          imp_SE_thresh, imp_mons_SE_thresh,
+                          imp_R_Pvol_RC, imp_mons_R_Pvol_RC,
+                          imp_Storage_thresh, imp_mons_Storage_thresh,
+                          ncol = 2)
+ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Pct_Impervious_SE_grid.png', plot = imp_SE_grid, width = 6, height = 7.5, units = c('in'), dpi = 300, bg = 'white')
+imp_SE_grid
+
+rm(imp_IE_effect, imp_Storage_thresh, imp_SE_thresh, imp_SE_grid, imp_SE_effect, imp_R_Pvol_RC, imp_R_Pint_RC,
+   imp_mons_Storage_thresh, imp_mons_SE_thresh, imp_mons_SE_effect, imp_mons_R_Pvol_RC, imp_mons_R_Pint_RC,
+   imp_mons_IE_thresh, imp_mons_IE_effect, imp_IE_thresh, imp_mons_IE_effect, imp_IE_grid, imp)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
