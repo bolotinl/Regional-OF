@@ -321,6 +321,7 @@ sd_SE_grid <- plot_grid(sd_SE_effect, sd_mons_SE_effect,
 ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_SE_grid.png', plot = sd_SE_grid, width = 6, height = 7.5, units = c('in'), dpi = 300, bg = 'white')
 sd_SE_grid
 
+SP_df <- barren_land
 rm(sd_IE_effect, sd_Storage_thresh, sd_SE_thresh, sd_SE_grid, sd_SE_effect, sd_R_Pvol_RC, sd_R_Pint_RC,
    sd_mons_Storage_thresh, sd_mons_SE_thresh, sd_mons_SE_effect, sd_mons_R_Pvol_RC, sd_mons_R_Pint_RC,
    sd_mons_IE_thresh, sd_mons_IE_effect, sd_IE_thresh, sd_mons_IE_effect, sd_IE_grid,nlcd, barren_land)
@@ -334,6 +335,7 @@ colnames(density) <- c('COMID', 'Stream Density')
 
 density <- merge(sites, density, by = 'COMID')
 density$GAGE_ID <- as.numeric(substr(density$GAGE_ID, 6, 13))
+SP_df <- merge(SP_df, density, by.x = c('site', 'COMID'), by.y = c('GAGE_ID', 'COMID'))
 
 density <- merge(density, sigs, by.x = 'GAGE_ID', by.y = 'site')
 
@@ -589,6 +591,9 @@ ksat <- read.csv('/Users/laurenbolotin/Desktop/san_pedro_ksat.csv')
 ksat <- ksat[,1:7]
 ksat[,3:7] <- ksat[,3:7]/100
 
+SP_df <- merge(SP_df, ksat, by.x = 'site', by.y = 'GAGE_ID')
+SP_df <- SP_df %>% select(-c(X_count, X_sum))
+colnames(SP_df)[32:35] <- c('ksat_mean', 'ksat_median','ksat_min', 'ksat_max')
 ksat <- merge(sigs, ksat, by.x = 'site', by.y = 'GAGE_ID', all.x = TRUE, all.y = FALSE)
 
 
@@ -840,6 +845,10 @@ rm(ksat, ksat_IE_grid, ksat_SE_grid, ksat_IE_effect, ksat_IE_thresh, ksat_SE_eff
 
 # DEPTH TO BEDROCK ---------------------------
 DTBR <- read.csv('./San_Pedro_DTBR.csv')
+
+SP_df <- merge(SP_df, DTBR, by.x = 'site', by.y = 'GAGE_ID')
+SP_df <- SP_df %>% select(-c(X_count, X_sum))
+colnames(SP_df)[36:39] <- c('DTBR_mean', 'DTBR_median', 'DTBR_min', 'DTBR_max')
 DTBR <- merge(sigs, DTBR, by.x = 'site', by.y = 'GAGE_ID', all.x = TRUE, all.y = FALSE)
 
 
@@ -1096,6 +1105,7 @@ perm <- perm %>%
   dplyr::select(c(COMID, ACC_OLSON_PERM))
 colnames(perm) <- c('COMID', 'permeability')
 
+SP_df <- merge(SP_df, perm, by = 'COMID')
 perm <- merge(sites, perm, by = 'COMID')
 perm$GAGE_ID <- as.numeric(substr(perm$GAGE_ID, 6, 13))
 
@@ -1358,6 +1368,8 @@ imp <- imp %>%
   dplyr::select(c(COMID, ACC_IMPV06))
 colnames(imp) <- c('COMID', 'Pct_Impervious')
 
+SP_df <- merge(SP_df, imp, by = 'COMID')
+
 imp <- merge(sites, imp, by = 'COMID')
 imp$GAGE_ID <- as.numeric(substr(imp$GAGE_ID, 6, 13))
 
@@ -1611,7 +1623,7 @@ rm(imp_IE_effect, imp_Storage_thresh, imp_SE_thresh, imp_SE_grid, imp_SE_effect,
    imp_mons_Storage_thresh, imp_mons_SE_thresh, imp_mons_SE_effect, imp_mons_R_Pvol_RC, imp_mons_R_Pint_RC,
    imp_mons_IE_thresh, imp_mons_IE_effect, imp_IE_thresh, imp_mons_IE_effect, imp_IE_grid, imp)
 
-
+write.csv(SP_df, './San_Pedro_sigs_attributes.csv')
 
 
 
