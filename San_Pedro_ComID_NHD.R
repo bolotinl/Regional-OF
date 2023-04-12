@@ -55,7 +55,8 @@ write.csv(sites, "./San_Pedro_COMIDs.csv")
 sigs <- read.csv('./Signature Data/area_weighted_NLDAS/signature_df.csv')
 sigs <- sigs %>%
   filter(OF_error_str == 'Warning: Ignoring NaNs in streamflow data. ')
-
+sigs <- sigs %>%
+  filter(site != 9470820)
 ## BARREN LAND -------------------
 nlcd <- read.table('../../../../../My Drive/Overland Flow MS/Data/Catchment Attribute Data/Land Cover/NLCD08_ACC_CONUS.TXT',
                    sep = ',', header = TRUE)
@@ -70,15 +71,15 @@ colnames(nlcd) <- c('COMID', 'site', 'Barren Land')
 barren_land <- merge(sigs, nlcd, by = 'site')
 
 # Monsoon IE Effect ----
-sd_mons_IE_effect_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$mons_IE_effect, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_mons_IE_effect_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$mons_IE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_IE_effect <- ggplot(barren_land, aes(y = `Barren Land`, x = mons_IE_effect))+
+sd_mons_IE_effect <- ggplot(barren_land, aes(x = `Barren Land`, y = mons_IE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Effect')+
+  labs(x = '', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -87,15 +88,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_IE_effect_mo
 rm(sd_mons_IE_effect_cor)
 
 # Monsoon SE effect ----
-sd_mons_SE_effect_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$mons_SE_effect, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_mons_SE_effect_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$mons_SE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_SE_effect <- ggplot(barren_land, aes(y = `Barren Land`, x = mons_SE_effect))+
+sd_mons_SE_effect <- ggplot(barren_land, aes(x = `Barren Land`, y = mons_SE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Effect')+
+  labs(x = '', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -103,15 +104,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_SE_effect_mo
 rm(sd_mons_SE_effect_cor)
 
 # Monsoon IE thresh ----
-sd_mons_IE_thresh_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$mons_IE_thresh, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_mons_IE_thresh_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$mons_IE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_IE_thresh <- ggplot(barren_land, aes(y = `Barren Land`, x = mons_IE_thresh))+
+sd_mons_IE_thresh <- ggplot(barren_land, aes(x = `Barren Land`, y = mons_IE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Thresh')+
+  labs(x = '', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -120,15 +121,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_IE_thresh_mo
 rm(sd_mons_IE_thresh_cor)
 
 # Monsoon SE thresh ----
-sd_mons_SE_thresh_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$mons_SE_thresh, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_mons_SE_thresh_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$mons_SE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_SE_thresh <- ggplot(barren_land, aes(y = `Barren Land`, x = mons_SE_thresh))+
+sd_mons_SE_thresh <- ggplot(barren_land, aes(x = `Barren Land`, y = mons_SE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Thresh')+
+  labs(x = '', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -137,15 +138,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_SE_thresh_mo
 rm(sd_mons_SE_thresh_cor)
 
 # Monsoon Storage thresh ----
-sd_mons_Storage_thresh_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$mons_Storage_thresh, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_mons_Storage_thresh_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$mons_Storage_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_Storage_thresh <- ggplot(barren_land, aes(y = `Barren Land`, x = mons_Storage_thresh))+
+sd_mons_Storage_thresh <- ggplot(barren_land, aes(x = `Barren Land`, y = mons_Storage_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'Storage Thresh')+
+  labs(x = 'Barren Land', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -154,15 +155,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_Storage_thre
 rm(sd_mons_Storage_thresh_cor)
 
 # Monsoon R Pvol ----
-sd_mons_R_Pvol_RC_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_mons_R_Pvol_RC_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_R_Pvol_RC <- ggplot(barren_land, aes(y = `Barren Land`, x = mons_R_Pvol_RC))+
+sd_mons_R_Pvol_RC <- ggplot(barren_land, aes(x = `Barren Land`, y = mons_R_Pvol_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pvol RC')+
+  labs(x = '', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -171,15 +172,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_R_Pvol_RC_mo
 rm(sd_mons_R_Pvol_RC_cor)
 
 # Monsoon R Pint ----
-sd_mons_R_Pint_RC_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_mons_R_Pint_RC_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_R_Pint_RC <- ggplot(barren_land, aes(y = `Barren Land`, x = mons_R_Pint_RC))+
+sd_mons_R_Pint_RC <- ggplot(barren_land, aes(x = `Barren Land`, y = mons_R_Pint_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pint RC')+
+  labs(x = 'Barren Land', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -188,15 +189,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_R_Pint_RC_mo
 rm(sd_mons_R_Pint_RC_cor)
 
 #  IE Effect ----
-sd_IE_effect_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$IE_effect, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_IE_effect_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$IE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_IE_effect <- ggplot(barren_land, aes(y = `Barren Land`, x = IE_effect))+
+sd_IE_effect <- ggplot(barren_land, aes(x = `Barren Land`, y = IE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color='#DD8D29')+
-  labs(y = 'Barren Land', x = 'IE Effect')+
+  labs(x = '', y = 'IE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -205,15 +206,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_IE_effect.pn
 rm(sd_IE_effect_cor)
 
 #  SE effect ----
-sd_SE_effect_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$SE_effect, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_SE_effect_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$SE_effect, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_SE_effect <- ggplot(barren_land, aes(y = `Barren Land`, x = SE_effect))+
+sd_SE_effect <- ggplot(barren_land, aes(x = `Barren Land`, y = SE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Barren Land', x = 'SE Effect')+
+  labs(x = '', y = 'SE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -222,15 +223,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_SE_effect.pn
 rm(sd_SE_effect_cor)
 
 #  IE thresh ----
-sd_IE_thresh_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$IE_thresh, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_IE_thresh_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$IE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_IE_thresh <- ggplot(barren_land, aes(y = `Barren Land`, x = IE_thresh))+
+sd_IE_thresh <- ggplot(barren_land, aes(x = `Barren Land`, y = IE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Barren Land', x = 'IE Thresh')+
+  labs(x = '', y = 'IE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -239,15 +240,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_IE_thresh.pn
 rm(sd_IE_thresh_cor)
 
 #  SE thresh ----
-sd_SE_thresh_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$SE_thresh, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_SE_thresh_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$SE_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_SE_thresh <- ggplot(barren_land, aes(y = `Barren Land`, x = SE_thresh))+
+sd_SE_thresh <- ggplot(barren_land, aes(x = `Barren Land`, y = SE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Barren Land', x = 'SE Thresh')+
+  labs(x = 'Barren Land', y = 'SE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -256,15 +257,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_SE_thresh.pn
 rm(sd_SE_thresh_cor)
 
 #  Storage thresh ----
-sd_Storage_thresh_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$Storage_thresh, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_Storage_thresh_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$Storage_thresh, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_Storage_thresh <- ggplot(barren_land, aes(y = `Barren Land`, x = Storage_thresh))+
+sd_Storage_thresh <- ggplot(barren_land, aes(x = `Barren Land`, y = Storage_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Barren Land', x = 'Storage Thresh')+
+  labs(x = 'Barren Land', y = 'Storage Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -273,15 +274,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_Storage_thre
 rm(sd_Storage_thresh_cor)
 
 #  R Pvol ----
-sd_R_Pvol_RC_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$R_Pvol_RC, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_R_Pvol_RC_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$R_Pvol_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_R_Pvol_RC <- ggplot(barren_land, aes(y = `Barren Land`, x = R_Pvol_RC))+
+sd_R_Pvol_RC <- ggplot(barren_land, aes(x = `Barren Land`, y = R_Pvol_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Barren Land', x = 'R Pvol RC')+
+  labs(x = 'Barren Land', y = 'R Pvol RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -290,15 +291,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_BarrenLand_R_Pvol_RC.pn
 rm(sd_R_Pvol_RC_cor)
 
 #  R Pint ----
-sd_R_Pint_RC_cor <- cor.test(y =barren_land$`Barren Land`, x =barren_land$R_Pint_RC, method = 'spearman', exact = FALSE)
-text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.8, hjust=0,
+sd_R_Pint_RC_cor <- cor.test(x =barren_land$`Barren Land`, y =barren_land$R_Pint_RC, method = 'spearman', exact = FALSE)
+text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.75, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.9, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_R_Pint_RC <- ggplot(barren_land, aes(y = `Barren Land`, x = R_Pint_RC))+
+sd_R_Pint_RC <- ggplot(barren_land, aes(x = `Barren Land`, y = R_Pint_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Barren Land', x = 'R Pint RC')+
+  labs(x = 'Barren Land', y = 'R Pint RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -340,15 +341,15 @@ SP_df <- merge(SP_df, density, by.x = c('site', 'COMID'), by.y = c('GAGE_ID', 'C
 density <- merge(density, sigs, by.x = 'GAGE_ID', by.y = 'site')
 
 # Monsoon IE Effect ----
-sd_mons_IE_effect_cor <- cor.test(y =density$`Stream Density`, x =density$mons_IE_effect, method = 'spearman', exact = FALSE)
+sd_mons_IE_effect_cor <- cor.test(x =density$`Stream Density`, y =density$mons_IE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_IE_effect <- ggplot(density, aes(y = `Stream Density`, x = mons_IE_effect))+
+sd_mons_IE_effect <- ggplot(density, aes(x = `Stream Density`, y = mons_IE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Effect')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -357,15 +358,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_IE_effect
 rm(sd_mons_IE_effect_cor)
 
 # Monsoon SE effect ----
-sd_mons_SE_effect_cor <- cor.test(y =density$`Stream Density`, x =density$mons_SE_effect, method = 'spearman', exact = FALSE)
+sd_mons_SE_effect_cor <- cor.test(x =density$`Stream Density`, y =density$mons_SE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_SE_effect <- ggplot(density, aes(y = `Stream Density`, x = mons_SE_effect))+
+sd_mons_SE_effect <- ggplot(density, aes(x = `Stream Density`, y = mons_SE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Effect')+
+  labs(x = '', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -373,15 +374,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_SE_effect
 rm(sd_mons_SE_effect_cor)
 
 # Monsoon IE thresh ----
-sd_mons_IE_thresh_cor <- cor.test(y =density$`Stream Density`, x =density$mons_IE_thresh, method = 'spearman', exact = FALSE)
+sd_mons_IE_thresh_cor <- cor.test(x =density$`Stream Density`, y =density$mons_IE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_IE_thresh <- ggplot(density, aes(y = `Stream Density`, x = mons_IE_thresh))+
+sd_mons_IE_thresh <- ggplot(density, aes(x = `Stream Density`, y = mons_IE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Thresh')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -389,15 +390,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_IE_thresh
 rm(sd_mons_IE_thresh_cor)
 
 # Monsoon SE thresh ----
-sd_mons_SE_thresh_cor <- cor.test(y =density$`Stream Density`, x =density$mons_SE_thresh, method = 'spearman', exact = FALSE)
+sd_mons_SE_thresh_cor <- cor.test(x =density$`Stream Density`, y =density$mons_SE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_SE_thresh <- ggplot(density, aes(y = `Stream Density`, x = mons_SE_thresh))+
+sd_mons_SE_thresh <- ggplot(density, aes(x = `Stream Density`, y = mons_SE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Thresh')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -405,15 +406,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_SE_thresh
 rm(sd_mons_SE_thresh_cor)
 
 # Monsoon Storage thresh ----
-sd_mons_Storage_thresh_cor <- cor.test(y =density$`Stream Density`, x =density$mons_Storage_thresh, method = 'spearman', exact = FALSE)
+sd_mons_Storage_thresh_cor <- cor.test(x =density$`Stream Density`, y =density$mons_Storage_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_Storage_thresh <- ggplot(density, aes(y = `Stream Density`, x = mons_Storage_thresh))+
+sd_mons_Storage_thresh <- ggplot(density, aes(x = `Stream Density`, y = mons_Storage_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'Storage Thresh')+
+  labs(y = '', x = 'Stream Density')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -421,15 +422,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_Storage_t
 rm(sd_mons_Storage_thresh_cor)
 
 # Monsoon R Pvol ----
-sd_mons_R_Pvol_RC_cor <- cor.test(y =density$`Stream Density`, x =density$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
+sd_mons_R_Pvol_RC_cor <- cor.test(x =density$`Stream Density`, y =density$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_R_Pvol_RC <- ggplot(density, aes(y = `Stream Density`, x = mons_R_Pvol_RC))+
+sd_mons_R_Pvol_RC <- ggplot(density, aes(x = `Stream Density`, y = mons_R_Pvol_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pvol RC')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -438,15 +439,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_R_Pvol_RC
 rm(sd_mons_R_Pvol_RC_cor)
 
 # Monsoon R Pint ----
-sd_mons_R_Pint_RC_cor <- cor.test(y =density$`Stream Density`, x =density$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
+sd_mons_R_Pint_RC_cor <- cor.test(x =density$`Stream Density`, y =density$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_mons_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_mons_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_mons_R_Pint_RC <- ggplot(density, aes(y = `Stream Density`, x = mons_R_Pint_RC))+
+sd_mons_R_Pint_RC <- ggplot(density, aes(x = `Stream Density`, y = mons_R_Pint_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pint RC')+
+  labs(x = '', y = 'R Pint RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -455,15 +456,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_R_Pint_RC
 rm(sd_mons_R_Pint_RC_cor)
 
 #  IE Effect ----
-sd_IE_effect_cor <- cor.test(y =density$`Stream Density`, x =density$IE_effect, method = 'spearman', exact = FALSE)
+sd_IE_effect_cor <- cor.test(x =density$`Stream Density`, y =density$IE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_IE_effect <- ggplot(density, aes(y = `Stream Density`, x = IE_effect))+
+sd_IE_effect <- ggplot(density, aes(x = `Stream Density`, y = IE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color='#DD8D29')+
-  labs(y = 'Stream Density', x = 'IE Effect')+
+  labs(x = '', y = 'IE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -471,15 +472,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_IE_effect
 rm(sd_IE_effect_cor)
 
 #  SE effect ----
-sd_SE_effect_cor <- cor.test(y =density$`Stream Density`, x =density$SE_effect, method = 'spearman', exact = FALSE)
+sd_SE_effect_cor <- cor.test(x =density$`Stream Density`, y =density$SE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_SE_effect <- ggplot(density, aes(y = `Stream Density`, x = SE_effect))+
+sd_SE_effect <- ggplot(density, aes(x = `Stream Density`, y = SE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream Density', x = 'SE Effect')+
+  labs(x = '', y = 'SE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -487,15 +488,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_SE_effect
 rm(sd_SE_effect_cor)
 
 #  IE thresh ----
-sd_IE_thresh_cor <- cor.test(y =density$`Stream Density`, x =density$IE_thresh, method = 'spearman', exact = FALSE)
+sd_IE_thresh_cor <- cor.test(x =density$`Stream Density`, y =density$IE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_IE_thresh <- ggplot(density, aes(y = `Stream Density`, x = IE_thresh))+
+sd_IE_thresh <- ggplot(density, aes(x = `Stream Density`, y = IE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream Density', x = 'IE Thresh')+
+  labs(x = '', y = 'IE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -503,15 +504,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_IE_thresh
 rm(sd_IE_thresh_cor)
 
 #  SE thresh ----
-sd_SE_thresh_cor <- cor.test(y =density$`Stream Density`, x =density$SE_thresh, method = 'spearman', exact = FALSE)
+sd_SE_thresh_cor <- cor.test(x =density$`Stream Density`, y =density$SE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_SE_thresh <- ggplot(density, aes(y = `Stream Density`, x = SE_thresh))+
+sd_SE_thresh <- ggplot(density, aes(x = `Stream Density`, y = SE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream Density', x = 'SE Thresh')+
+  labs(x = '', y = 'SE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -519,15 +520,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_SE_thresh
 rm(sd_SE_thresh_cor)
 
 #  Storage thresh ----
-sd_Storage_thresh_cor <- cor.test(y =density$`Stream Density`, x =density$Storage_thresh, method = 'spearman', exact = FALSE)
+sd_Storage_thresh_cor <- cor.test(x =density$`Stream Density`, y =density$Storage_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_Storage_thresh <- ggplot(density, aes(y = `Stream Density`, x = Storage_thresh))+
+sd_Storage_thresh <- ggplot(density, aes(x = `Stream Density`, y = Storage_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream Density', x = 'Storage Thresh')+
+  labs(x = 'Stream Density', y = 'Storage Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -535,15 +536,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_Storage_t
 rm(sd_Storage_thresh_cor)
 
 #  R Pvol ----
-sd_R_Pvol_RC_cor <- cor.test(y =density$`Stream Density`, x =density$R_Pvol_RC, method = 'spearman', exact = FALSE)
+sd_R_Pvol_RC_cor <- cor.test(x =density$`Stream Density`, y =density$R_Pvol_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_R_Pvol_RC <- ggplot(density, aes(y = `Stream Density`, x = R_Pvol_RC))+
+sd_R_Pvol_RC <- ggplot(density, aes(x = `Stream Density`, y = R_Pvol_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream Density', x = 'R Pvol RC')+
+  labs(x = '', y = 'R Pvol RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -551,15 +552,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_StreamDensity_R_Pvol_RC
 rm(sd_R_Pvol_RC_cor)
 
 #  R Pint ----
-sd_R_Pint_RC_cor <- cor.test(y =density$`Stream Density`, x =density$R_Pint_RC, method = 'spearman', exact = FALSE)
+sd_R_Pint_RC_cor <- cor.test(x =density$`Stream Density`, y =density$R_Pint_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(sd_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(sd_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-sd_R_Pint_RC <- ggplot(density, aes(y = `Stream Density`, x = R_Pint_RC))+
+sd_R_Pint_RC <- ggplot(density, aes(x = `Stream Density`, y = R_Pint_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream Density', x = 'R Pint RC')+
+  labs(x = 'Stream Density', y = 'R Pint RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -598,15 +599,15 @@ ksat <- merge(sigs, ksat, by.x = 'site', by.y = 'GAGE_ID', all.x = TRUE, all.y =
 
 
 # Monsoon IE Effect ----
-ksat_mons_IE_effect_cor <- cor.test(y =ksat$X_mean, x =ksat$mons_IE_effect, method = 'spearman', exact = FALSE)
+ksat_mons_IE_effect_cor <- cor.test(x =ksat$X_mean, y =ksat$mons_IE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_mons_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_mons_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_mons_IE_effect <- ggplot(ksat, aes(y = X_mean, x = mons_IE_effect))+
+ksat_mons_IE_effect <- ggplot(ksat, aes(x = X_mean, y = mons_IE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Effect')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -614,15 +615,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_IE_effect_mons.png
 rm(ksat_mons_IE_effect_cor)
 
 # Monsoon SE effect ----
-ksat_mons_SE_effect_cor <- cor.test(y =ksat$X_mean, x =ksat$mons_SE_effect, method = 'spearman', exact = FALSE)
+ksat_mons_SE_effect_cor <- cor.test(x =ksat$X_mean, y =ksat$mons_SE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_mons_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_mons_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_mons_SE_effect <- ggplot(ksat, aes(y = X_mean, x = mons_SE_effect))+
+ksat_mons_SE_effect <- ggplot(ksat, aes(x = X_mean, y = mons_SE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Effect')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -630,15 +631,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_SE_effect_mons.png
 rm(ksat_mons_SE_effect_cor)
 
 # Monsoon IE thresh ----
-ksat_mons_IE_thresh_cor <- cor.test(y =ksat$X_mean, x =ksat$mons_IE_thresh, method = 'spearman', exact = FALSE)
+ksat_mons_IE_thresh_cor <- cor.test(x =ksat$X_mean, y =ksat$mons_IE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_mons_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_mons_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_mons_IE_thresh <- ggplot(ksat, aes(y = X_mean, x = mons_IE_thresh))+
+ksat_mons_IE_thresh <- ggplot(ksat, aes(x = X_mean, y = mons_IE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Thresh')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -646,15 +647,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_IE_thresh_mons.png
 rm(ksat_mons_IE_thresh_cor)
 
 # Monsoon SE thresh ----
-ksat_mons_SE_thresh_cor <- cor.test(y =ksat$X_mean, x =ksat$mons_SE_thresh, method = 'spearman', exact = FALSE)
+ksat_mons_SE_thresh_cor <- cor.test(x =ksat$X_mean, y =ksat$mons_SE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_mons_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_mons_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_mons_SE_thresh <- ggplot(ksat, aes(y = X_mean, x = mons_SE_thresh))+
+ksat_mons_SE_thresh <- ggplot(ksat, aes(x = X_mean, y = mons_SE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Thresh')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -662,15 +663,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_SE_thresh_mons.png
 rm(ksat_mons_SE_thresh_cor)
 
 # Monsoon Storage thresh ----
-ksat_mons_Storage_thresh_cor <- cor.test(y =ksat$X_mean, x =ksat$mons_Storage_thresh, method = 'spearman', exact = FALSE)
+ksat_mons_Storage_thresh_cor <- cor.test(x =ksat$X_mean, y =ksat$mons_Storage_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_mons_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_mons_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_mons_Storage_thresh <- ggplot(ksat, aes(y = X_mean, x = mons_Storage_thresh))+
+ksat_mons_Storage_thresh <- ggplot(ksat, aes(x = X_mean, y = mons_Storage_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'Storage Thresh')+
+  labs(x = 'Ksat', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -678,15 +679,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_Storage_thresh_mon
 rm(ksat_mons_Storage_thresh_cor)
 
 # Monsoon R Pvol ----
-ksat_mons_R_Pvol_RC_cor <- cor.test(y =ksat$X_mean, x =ksat$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
+ksat_mons_R_Pvol_RC_cor <- cor.test(x =ksat$X_mean, y =ksat$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_mons_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_mons_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_mons_R_Pvol_RC <- ggplot(ksat, aes(y = X_mean, x = mons_R_Pvol_RC))+
+ksat_mons_R_Pvol_RC <- ggplot(ksat, aes(x = X_mean, y = mons_R_Pvol_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pvol RC')+
+  labs(x = '', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -694,15 +695,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_R_Pvol_RC_mons.png
 rm(ksat_mons_R_Pvol_RC_cor)
 
 # Monsoon R Pint ----
-ksat_mons_R_Pint_RC_cor <- cor.test(y =ksat$X_mean, x =ksat$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
+ksat_mons_R_Pint_RC_cor <- cor.test(x =ksat$X_mean, y =ksat$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_mons_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_mons_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_mons_R_Pint_RC <- ggplot(ksat, aes(y = X_mean, x = mons_R_Pint_RC))+
+ksat_mons_R_Pint_RC <- ggplot(ksat, aes(x = X_mean, y = mons_R_Pint_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pint RC')+
+  labs(x = 'Ksat', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -710,15 +711,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_R_Pint_RC_mons.png
 rm(ksat_mons_R_Pint_RC_cor)
 
 #  IE Effect ----
-ksat_IE_effect_cor <- cor.test(y =ksat$X_mean, x =ksat$IE_effect, method = 'spearman', exact = FALSE)
+ksat_IE_effect_cor <- cor.test(x =ksat$X_mean, y =ksat$IE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_IE_effect <- ggplot(ksat, aes(y = X_mean, x = IE_effect))+
+ksat_IE_effect <- ggplot(ksat, aes(x = X_mean, y = IE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color='#DD8D29')+
-  labs(y = 'Stream ksat', x = 'IE Effect')+
+  labs(x = '', y = 'IE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -726,15 +727,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_IE_effect.png', pl
 rm(ksat_IE_effect_cor)
 
 #  SE effect ----
-ksat_SE_effect_cor <- cor.test(y =ksat$X_mean, x =ksat$SE_effect, method = 'spearman', exact = FALSE)
+ksat_SE_effect_cor <- cor.test(x =ksat$X_mean, y =ksat$SE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_SE_effect <- ggplot(ksat, aes(y = X_mean, x = SE_effect))+
+ksat_SE_effect <- ggplot(ksat, aes(x = X_mean, y = SE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream ksat', x = 'SE Effect')+
+  labs(x = '', y = 'SE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -742,15 +743,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_SE_effect.png', pl
 rm(ksat_SE_effect_cor)
 
 #  IE thresh ----
-ksat_IE_thresh_cor <- cor.test(y =ksat$X_mean, x =ksat$IE_thresh, method = 'spearman', exact = FALSE)
+ksat_IE_thresh_cor <- cor.test(x =ksat$X_mean, y =ksat$IE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_IE_thresh <- ggplot(ksat, aes(y = X_mean, x = IE_thresh))+
+ksat_IE_thresh <- ggplot(ksat, aes(x = X_mean, y = IE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream ksat', x = 'IE Thresh')+
+  labs(x = '', y = 'IE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -758,15 +759,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_IE_thresh.png', pl
 rm(ksat_IE_thresh_cor)
 
 #  SE thresh ----
-ksat_SE_thresh_cor <- cor.test(y =ksat$X_mean, x =ksat$SE_thresh, method = 'spearman', exact = FALSE)
+ksat_SE_thresh_cor <- cor.test(x =ksat$X_mean, y =ksat$SE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_SE_thresh <- ggplot(ksat, aes(y = X_mean, x = SE_thresh))+
+ksat_SE_thresh <- ggplot(ksat, aes(x = X_mean, y = SE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream ksat', x = 'SE Thresh')+
+  labs(x = '', y = 'SE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -774,15 +775,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_SE_thresh.png', pl
 rm(ksat_SE_thresh_cor)
 
 #  Storage thresh ----
-ksat_Storage_thresh_cor <- cor.test(y =ksat$X_mean, x =ksat$Storage_thresh, method = 'spearman', exact = FALSE)
+ksat_Storage_thresh_cor <- cor.test(x =ksat$X_mean, y =ksat$Storage_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_Storage_thresh <- ggplot(ksat, aes(y = X_mean, x = Storage_thresh))+
+ksat_Storage_thresh <- ggplot(ksat, aes(x = X_mean, y = Storage_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream ksat', x = 'Storage Thresh')+
+  labs(x = 'Ksat', y = 'Storage Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -790,15 +791,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_Storage_thresh.png
 rm(ksat_Storage_thresh_cor)
 
 #  R Pvol ----
-ksat_R_Pvol_RC_cor <- cor.test(y =ksat$X_mean, x =ksat$R_Pvol_RC, method = 'spearman', exact = FALSE)
+ksat_R_Pvol_RC_cor <- cor.test(x =ksat$X_mean, y =ksat$R_Pvol_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_R_Pvol_RC <- ggplot(ksat, aes(y = X_mean, x = R_Pvol_RC))+
+ksat_R_Pvol_RC <- ggplot(ksat, aes(x = X_mean, y = R_Pvol_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream ksat', x = 'R Pvol RC')+
+  labs(x = '', y = 'R Pvol RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -806,15 +807,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Ksat_R_Pvol_RC.png', pl
 rm(ksat_R_Pvol_RC_cor)
 
 #  R Pint ----
-ksat_R_Pint_RC_cor <- cor.test(y =ksat$X_mean, x =ksat$R_Pint_RC, method = 'spearman', exact = FALSE)
+ksat_R_Pint_RC_cor <- cor.test(x =ksat$X_mean, y =ksat$R_Pint_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(ksat_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(ksat_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-ksat_R_Pint_RC <- ggplot(ksat, aes(y = X_mean, x = R_Pint_RC))+
+ksat_R_Pint_RC <- ggplot(ksat, aes(x = X_mean, y = R_Pint_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Stream ksat', x = 'R Pint RC')+
+  labs(x = 'Ksat', y = 'R Pint RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -853,15 +854,15 @@ DTBR <- merge(sigs, DTBR, by.x = 'site', by.y = 'GAGE_ID', all.x = TRUE, all.y =
 
 
 # Monsoon IE Effect ----
-DTBR_mons_IE_effect_cor <- cor.test(y =DTBR$X_mean, x =DTBR$mons_IE_effect, method = 'spearman', exact = FALSE)
+DTBR_mons_IE_effect_cor <- cor.test(x =DTBR$X_mean, y =DTBR$mons_IE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_mons_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_mons_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_mons_IE_effect <- ggplot(DTBR, aes(y = X_mean, x = mons_IE_effect))+
+DTBR_mons_IE_effect <- ggplot(DTBR, aes(x = X_mean, y = mons_IE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Effect')+
+  labs(x = '', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -869,15 +870,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_IE_effect_mons.png
 rm(DTBR_mons_IE_effect_cor)
 
 # Monsoon SE effect ----
-DTBR_mons_SE_effect_cor <- cor.test(y =DTBR$X_mean, x =DTBR$mons_SE_effect, method = 'spearman', exact = FALSE)
+DTBR_mons_SE_effect_cor <- cor.test(x =DTBR$X_mean, y =DTBR$mons_SE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_mons_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_mons_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_mons_SE_effect <- ggplot(DTBR, aes(y = X_mean, x = mons_SE_effect))+
+DTBR_mons_SE_effect <- ggplot(DTBR, aes(x = X_mean, y = mons_SE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Effect')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -885,15 +886,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_SE_effect_mons.png
 rm(DTBR_mons_SE_effect_cor)
 
 # Monsoon IE thresh ----
-DTBR_mons_IE_thresh_cor <- cor.test(y =DTBR$X_mean, x =DTBR$mons_IE_thresh, method = 'spearman', exact = FALSE)
+DTBR_mons_IE_thresh_cor <- cor.test(x =DTBR$X_mean, y =DTBR$mons_IE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_mons_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_mons_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_mons_IE_thresh <- ggplot(DTBR, aes(y = X_mean, x = mons_IE_thresh))+
+DTBR_mons_IE_thresh <- ggplot(DTBR, aes(x = X_mean, y = mons_IE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Thresh')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -901,15 +902,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_IE_thresh_mons.png
 rm(DTBR_mons_IE_thresh_cor)
 
 # Monsoon SE thresh ----
-DTBR_mons_SE_thresh_cor <- cor.test(y =DTBR$X_mean, x =DTBR$mons_SE_thresh, method = 'spearman', exact = FALSE)
+DTBR_mons_SE_thresh_cor <- cor.test(x =DTBR$X_mean, y =DTBR$mons_SE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_mons_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_mons_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_mons_SE_thresh <- ggplot(DTBR, aes(y = X_mean, x = mons_SE_thresh))+
+DTBR_mons_SE_thresh <- ggplot(DTBR, aes(x = X_mean, y = mons_SE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Thresh')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -918,15 +919,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_SE_thresh_mons.png
 rm(DTBR_mons_SE_thresh_cor)
 
 # Monsoon Storage thresh ----
-DTBR_mons_Storage_thresh_cor <- cor.test(y =DTBR$X_mean, x =DTBR$mons_Storage_thresh, method = 'spearman', exact = FALSE)
+DTBR_mons_Storage_thresh_cor <- cor.test(x =DTBR$X_mean, y =DTBR$mons_Storage_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_mons_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_mons_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_mons_Storage_thresh <- ggplot(DTBR, aes(y = X_mean, x = mons_Storage_thresh))+
+DTBR_mons_Storage_thresh <- ggplot(DTBR, aes(x = X_mean, y = mons_Storage_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'Storage Thresh')+
+  labs(y = '', x = 'Depth to Bedrock')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -934,15 +935,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_Storage_thresh_mon
 rm(DTBR_mons_Storage_thresh_cor)
 
 # Monsoon R Pvol ----
-DTBR_mons_R_Pvol_RC_cor <- cor.test(y =DTBR$X_mean, x =DTBR$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
+DTBR_mons_R_Pvol_RC_cor <- cor.test(x =DTBR$X_mean, y =DTBR$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_mons_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_mons_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_mons_R_Pvol_RC <- ggplot(DTBR, aes(y = X_mean, x = mons_R_Pvol_RC))+
+DTBR_mons_R_Pvol_RC <- ggplot(DTBR, aes(x = X_mean, y = mons_R_Pvol_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pvol RC')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -950,15 +951,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_R_Pvol_RC_mons.png
 rm(DTBR_mons_R_Pvol_RC_cor)
 
 # Monsoon R Pint ----
-DTBR_mons_R_Pint_RC_cor <- cor.test(y =DTBR$X_mean, x =DTBR$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
+DTBR_mons_R_Pint_RC_cor <- cor.test(x =DTBR$X_mean, y =DTBR$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_mons_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_mons_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_mons_R_Pint_RC <- ggplot(DTBR, aes(y = X_mean, x = mons_R_Pint_RC))+
+DTBR_mons_R_Pint_RC <- ggplot(DTBR, aes(x = X_mean, y = mons_R_Pint_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pint RC')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -966,15 +967,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_R_Pint_RC_mons.png
 rm(DTBR_mons_R_Pint_RC_cor)
 
 #  IE Effect ----
-DTBR_IE_effect_cor <- cor.test(y =DTBR$X_mean, x =DTBR$IE_effect, method = 'spearman', exact = FALSE)
+DTBR_IE_effect_cor <- cor.test(x =DTBR$X_mean, y =DTBR$IE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_IE_effect <- ggplot(DTBR, aes(y = X_mean, x = IE_effect))+
+DTBR_IE_effect <- ggplot(DTBR, aes(x = X_mean, y = IE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color='#DD8D29')+
-  labs(y = 'Depth to Bedrock (cm)', x = 'IE Effect')+
+  labs(x = '', y = 'IE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -982,15 +983,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_IE_effect.png', pl
 rm(DTBR_IE_effect_cor)
 
 #  SE effect ----
-DTBR_SE_effect_cor <- cor.test(y =DTBR$X_mean, x =DTBR$SE_effect, method = 'spearman', exact = FALSE)
+DTBR_SE_effect_cor <- cor.test(x =DTBR$X_mean, y =DTBR$SE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_SE_effect <- ggplot(DTBR, aes(y = X_mean, x = SE_effect))+
+DTBR_SE_effect <- ggplot(DTBR, aes(x = X_mean, y = SE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Depth to Bedrock (cm)', x = 'SE Effect')+
+  labs(x = '', y = 'SE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -998,15 +999,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_SE_effect.png', pl
 rm(DTBR_SE_effect_cor)
 
 #  IE thresh ----
-DTBR_IE_thresh_cor <- cor.test(y =DTBR$X_mean, x =DTBR$IE_thresh, method = 'spearman', exact = FALSE)
+DTBR_IE_thresh_cor <- cor.test(x =DTBR$X_mean, y =DTBR$IE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_IE_thresh <- ggplot(DTBR, aes(y = X_mean, x = IE_thresh))+
+DTBR_IE_thresh <- ggplot(DTBR, aes(x = X_mean, y = IE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Depth to Bedrock (cm)', x = 'IE Thresh')+
+  labs(x = '', y = 'IE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1014,15 +1015,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_IE_thresh.png', pl
 rm(DTBR_IE_thresh_cor)
 
 #  SE thresh ----
-DTBR_SE_thresh_cor <- cor.test(y =DTBR$X_mean, x =DTBR$SE_thresh, method = 'spearman', exact = FALSE)
+DTBR_SE_thresh_cor <- cor.test(x =DTBR$X_mean, y =DTBR$SE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_SE_thresh <- ggplot(DTBR, aes(y = X_mean, x = SE_thresh))+
+DTBR_SE_thresh <- ggplot(DTBR, aes(x = X_mean, y = SE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Depth to Bedrock (cm)', x = 'SE Thresh')+
+  labs(x = '', y = 'SE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1030,15 +1031,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_SE_thresh.png', pl
 rm(DTBR_SE_thresh_cor)
 
 #  Storage thresh ----
-DTBR_Storage_thresh_cor <- cor.test(y =DTBR$X_mean, x =DTBR$Storage_thresh, method = 'spearman', exact = FALSE)
+DTBR_Storage_thresh_cor <- cor.test(x =DTBR$X_mean, y =DTBR$Storage_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_Storage_thresh <- ggplot(DTBR, aes(y = X_mean, x = Storage_thresh))+
+DTBR_Storage_thresh <- ggplot(DTBR, aes(x = X_mean, y = Storage_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Depth to Bedrock (cm)', x = 'Storage Thresh')+
+  labs(x = 'Depth to Bedrock', y = 'Storage Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1046,15 +1047,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_Storage_thresh.png
 rm(DTBR_Storage_thresh_cor)
 
 #  R Pvol ----
-DTBR_R_Pvol_RC_cor <- cor.test(y =DTBR$X_mean, x =DTBR$R_Pvol_RC, method = 'spearman', exact = FALSE)
+DTBR_R_Pvol_RC_cor <- cor.test(x =DTBR$X_mean, y =DTBR$R_Pvol_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_R_Pvol_RC <- ggplot(DTBR, aes(y = X_mean, x = R_Pvol_RC))+
+DTBR_R_Pvol_RC <- ggplot(DTBR, aes(x = X_mean, y = R_Pvol_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Depth to Bedrock (cm)', x = 'R Pvol RC')+
+  labs(x = '', y = 'R Pvol RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1062,15 +1063,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_DTBR_R_Pvol_RC.png', pl
 rm(DTBR_R_Pvol_RC_cor)
 
 #  R Pint ----
-DTBR_R_Pint_RC_cor <- cor.test(y =DTBR$X_mean, x =DTBR$R_Pint_RC, method = 'spearman', exact = FALSE)
+DTBR_R_Pint_RC_cor <- cor.test(x =DTBR$X_mean, y =DTBR$R_Pint_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(DTBR_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(DTBR_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-DTBR_R_Pint_RC <- ggplot(DTBR, aes(y = X_mean, x = R_Pint_RC))+
+DTBR_R_Pint_RC <- ggplot(DTBR, aes(x = X_mean, y = R_Pint_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Depth to Bedrock (cm)', x = 'R Pint RC')+
+  labs(x = 'Depth to Bedrock', y = 'R Pint RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1113,15 +1114,15 @@ perm <- merge(perm, sigs, by.x = 'GAGE_ID', by.y = 'site')
 
 
 # Monsoon IE Effect ----
-perm_mons_IE_effect_cor <- cor.test(y =perm$permeability, x =perm$mons_IE_effect, method = 'spearman', exact = FALSE)
+perm_mons_IE_effect_cor <- cor.test(x =perm$permeability, y =perm$mons_IE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_mons_IE_effect <- ggplot(perm, aes(y = permeability, x = mons_IE_effect))+
+perm_mons_IE_effect <- ggplot(perm, aes(x = permeability, y = mons_IE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Effect')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1130,15 +1131,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_IE_effect_
 rm(perm_mons_IE_effect_cor)
 
 # Monsoon SE effect ----
-perm_mons_SE_effect_cor <- cor.test(y =perm$permeability, x =perm$mons_SE_effect, method = 'spearman', exact = FALSE)
+perm_mons_SE_effect_cor <- cor.test(x =perm$permeability, y =perm$mons_SE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_mons_SE_effect <- ggplot(perm, aes(y = permeability, x = mons_SE_effect))+
+perm_mons_SE_effect <- ggplot(perm, aes(x = permeability, y = mons_SE_effect))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Effect')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1146,15 +1147,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_SE_effect_
 rm(perm_mons_SE_effect_cor)
 
 # Monsoon IE thresh ----
-perm_mons_IE_thresh_cor <- cor.test(y =perm$permeability, x =perm$mons_IE_thresh, method = 'spearman', exact = FALSE)
+perm_mons_IE_thresh_cor <- cor.test(x =perm$permeability, y =perm$mons_IE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_mons_IE_thresh <- ggplot(perm, aes(y = permeability, x = mons_IE_thresh))+
+perm_mons_IE_thresh <- ggplot(perm, aes(x = permeability, y = mons_IE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'IE Thresh')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1162,15 +1163,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_IE_thresh_
 rm(perm_mons_IE_thresh_cor)
 
 # Monsoon SE thresh ----
-perm_mons_SE_thresh_cor <- cor.test(y =perm$permeability, x =perm$mons_SE_thresh, method = 'spearman', exact = FALSE)
+perm_mons_SE_thresh_cor <- cor.test(x =perm$permeability, y =perm$mons_SE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_mons_SE_thresh <- ggplot(perm, aes(y = permeability, x = mons_SE_thresh))+
+perm_mons_SE_thresh <- ggplot(perm, aes(x = permeability, y = mons_SE_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'SE Thresh')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1178,15 +1179,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_SE_thresh_
 rm(perm_mons_SE_thresh_cor)
 
 # Monsoon Storage thresh ----
-perm_mons_Storage_thresh_cor <- cor.test(y =perm$permeability, x =perm$mons_Storage_thresh, method = 'spearman', exact = FALSE)
+perm_mons_Storage_thresh_cor <- cor.test(x =perm$permeability, y =perm$mons_Storage_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_mons_Storage_thresh <- ggplot(perm, aes(y = permeability, x = mons_Storage_thresh))+
+perm_mons_Storage_thresh <- ggplot(perm, aes(x = permeability, y = mons_Storage_thresh))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'Storage Thresh')+
+  labs(x = 'Permeability', y = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1194,15 +1195,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_Storage_th
 rm(perm_mons_Storage_thresh_cor)
 
 # Monsoon R Pvol ----
-perm_mons_R_Pvol_RC_cor <- cor.test(y =perm$permeability, x =perm$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
+perm_mons_R_Pvol_RC_cor <- cor.test(x =perm$permeability, y =perm$mons_R_Pvol_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_mons_R_Pvol_RC <- ggplot(perm, aes(y = permeability, x = mons_R_Pvol_RC))+
+perm_mons_R_Pvol_RC <- ggplot(perm, aes(x = permeability, y = mons_R_Pvol_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pvol RC')+
+  labs(y = '', x = '')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1211,15 +1212,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_R_Pvol_RC_
 rm(perm_mons_R_Pvol_RC_cor)
 
 # Monsoon R Pint ----
-perm_mons_R_Pint_RC_cor <- cor.test(y =perm$permeability, x =perm$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
+perm_mons_R_Pint_RC_cor <- cor.test(x =perm$permeability, y =perm$mons_R_Pint_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_mons_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_mons_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_mons_R_Pint_RC <- ggplot(perm, aes(y = permeability, x = mons_R_Pint_RC))+
+perm_mons_R_Pint_RC <- ggplot(perm, aes(x = permeability, y = mons_R_Pint_RC))+
   geom_point(color = '#46ACC8')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#46ACC8')+
-  labs(y = '', x = 'R Pint RC')+
+  labs(y = '', x = 'Permeability')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1228,15 +1229,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_R_Pint_RC_
 rm(perm_mons_R_Pint_RC_cor)
 
 #  IE Effect ----
-perm_IE_effect_cor <- cor.test(y =perm$permeability, x =perm$IE_effect, method = 'spearman', exact = FALSE)
+perm_IE_effect_cor <- cor.test(x =perm$permeability, y =perm$IE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_IE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_IE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_IE_effect <- ggplot(perm, aes(y = permeability, x = IE_effect))+
+perm_IE_effect <- ggplot(perm, aes(x = permeability, y = IE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color='#DD8D29')+
-  labs(y = 'Permeability (um/s)', x = 'IE Effect')+
+  labs(x = '', y = 'IE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1244,15 +1245,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_IE_effect.
 rm(perm_IE_effect_cor)
 
 #  SE effect ----
-perm_SE_effect_cor <- cor.test(y =perm$permeability, x =perm$SE_effect, method = 'spearman', exact = FALSE)
+perm_SE_effect_cor <- cor.test(x =perm$permeability, y =perm$SE_effect, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_SE_effect_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_SE_effect_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_SE_effect <- ggplot(perm, aes(y = permeability, x = SE_effect))+
+perm_SE_effect <- ggplot(perm, aes(x = permeability, y = SE_effect))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Permeability (um/s)', x = 'SE Effect')+
+  labs(x = '', y = 'SE Effect')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1260,15 +1261,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_SE_effect.
 rm(perm_SE_effect_cor)
 
 #  IE thresh ----
-perm_IE_thresh_cor <- cor.test(y =perm$permeability, x =perm$IE_thresh, method = 'spearman', exact = FALSE)
+perm_IE_thresh_cor <- cor.test(x =perm$permeability, y =perm$IE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_IE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_IE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_IE_thresh <- ggplot(perm, aes(y = permeability, x = IE_thresh))+
+perm_IE_thresh <- ggplot(perm, aes(x = permeability, y = IE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Permeability (um/s)', x = 'IE Thresh')+
+  labs(x = '', y = 'IE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1276,15 +1277,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_IE_thresh.
 rm(perm_IE_thresh_cor)
 
 #  SE thresh ----
-perm_SE_thresh_cor <- cor.test(y =perm$permeability, x =perm$SE_thresh, method = 'spearman', exact = FALSE)
+perm_SE_thresh_cor <- cor.test(x =perm$permeability, y =perm$SE_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_SE_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_SE_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_SE_thresh <- ggplot(perm, aes(y = permeability, x = SE_thresh))+
+perm_SE_thresh <- ggplot(perm, aes(x = permeability, y = SE_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Permeability (um/s)', x = 'SE Thresh')+
+  labs(x = '', y = 'SE Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1292,15 +1293,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_SE_thresh.
 rm(perm_SE_thresh_cor)
 
 #  Storage thresh ----
-perm_Storage_thresh_cor <- cor.test(y =perm$permeability, x =perm$Storage_thresh, method = 'spearman', exact = FALSE)
+perm_Storage_thresh_cor <- cor.test(x =perm$permeability, y =perm$Storage_thresh, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_Storage_thresh_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_Storage_thresh_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_Storage_thresh <- ggplot(perm, aes(y = permeability, x = Storage_thresh))+
+perm_Storage_thresh <- ggplot(perm, aes(x = permeability, y = Storage_thresh))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Permeability (um/s)', x = 'Storage Thresh')+
+  labs(x = 'Permeability', y = 'Storage Thresh')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1308,15 +1309,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_Storage_th
 rm(perm_Storage_thresh_cor)
 
 #  R Pvol ----
-perm_R_Pvol_RC_cor <- cor.test(y =perm$permeability, x =perm$R_Pvol_RC, method = 'spearman', exact = FALSE)
+perm_R_Pvol_RC_cor <- cor.test(x =perm$permeability, y =perm$R_Pvol_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_R_Pvol_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_R_Pvol_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_R_Pvol_RC <- ggplot(perm, aes(y = permeability, x = R_Pvol_RC))+
+perm_R_Pvol_RC <- ggplot(perm, aes(x = permeability, y = R_Pvol_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Permeability (um/s)', x = 'R Pvol RC')+
+  labs(x = '', y = 'R Pvol RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1324,15 +1325,15 @@ ggsave('../Figures/Correlation Plots/San Pedro/San_Pedro_Permeability_R_Pvol_RC.
 rm(perm_R_Pvol_RC_cor)
 
 #  R Pint ----
-perm_R_Pint_RC_cor <- cor.test(y =perm$permeability, x =perm$R_Pint_RC, method = 'spearman', exact = FALSE)
+perm_R_Pint_RC_cor <- cor.test(x =perm$permeability, y =perm$R_Pint_RC, method = 'spearman', exact = FALSE)
 text_rho <- grobTree(textGrob(paste0('rho = ', round(perm_R_Pint_RC_cor[["estimate"]],3)), x = 0.60,  y = 0.1, hjust=0,
                               gp=gpar(col="black", fontsize=10)))
 text_p <- grobTree(textGrob(paste0('p-value = ', round(perm_R_Pint_RC_cor[["p.value"]],3)), x = 0.60,  y = 0.2, hjust=0,
                             gp=gpar(col="black", fontsize=10)))
-perm_R_Pint_RC <- ggplot(perm, aes(y = permeability, x = R_Pint_RC))+
+perm_R_Pint_RC <- ggplot(perm, aes(x = permeability, y = R_Pint_RC))+
   geom_point(color = '#DD8D29')+
   geom_smooth(method=lm, se=FALSE, fullrange=TRUE, color = '#DD8D29')+
-  labs(y = 'Permeability (um/s)', x = 'R Pint RC')+
+  labs(x = 'Permeability', y = 'R Pint RC')+
   theme_bw()+ 
   annotation_custom(text_rho)+
   annotation_custom(text_p)
@@ -1623,7 +1624,11 @@ rm(imp_IE_effect, imp_Storage_thresh, imp_SE_thresh, imp_SE_grid, imp_SE_effect,
    imp_mons_Storage_thresh, imp_mons_SE_thresh, imp_mons_SE_effect, imp_mons_R_Pvol_RC, imp_mons_R_Pint_RC,
    imp_mons_IE_thresh, imp_mons_IE_effect, imp_IE_thresh, imp_mons_IE_effect, imp_IE_grid, imp)
 
-write.csv(SP_df, './San_Pedro_sigs_attributes.csv')
+meta$site_no <- as.numeric(substr(meta$site_no, 6, 13))
+meta <- meta %>% select(-c(huc_cd))
+SP_df <- merge(SP_df, meta, by.x = 'site', by.y = 'site_no')
+SP_df <- SP_df %>% select(-c(X))
+write.csv(SP_df, './San_Pedro_sigs_attributes.csv', row.names = FALSE)
 
 
 
